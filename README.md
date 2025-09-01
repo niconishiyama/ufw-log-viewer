@@ -189,13 +189,8 @@ ufw-log-viewer/
 
 ## Suporte e Contribuições
 
-Esta ferramenta foi desenvolvida para facilitar a análise de logs do UFW. Para sugestões, melhorias ou reportar problemas, entre em contato ou contribua com o projeto.
-
-## Licença
+Esta ferramenta foi desenvolvida para facilitar a análise de logs do UFW. Para sugestões, melhorias ou reportar problemas, contribua com o projeto.
 
 Este projeto é de código aberto e pode ser usado, modificado e distribuído livremente.
 
----
-
-**UFW Log Viewer** - Transformando logs complexos em insights claros! 🛡️📊
 
