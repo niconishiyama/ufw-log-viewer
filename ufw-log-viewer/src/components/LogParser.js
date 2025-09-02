@@ -3,15 +3,14 @@ export function parseUfwLogEntry(logEntry) {
   const parsedData = {};
 
   // Regex para capturar a parte inicial do log e o restante como uma string para posterior parsing
-  const match = logEntry.match(/(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}[+-]\d{2}:\d{2}) (\S+) kernel: \[UFW (\S+)\] IN=(\S+)(.*)/);
+  const match = logEntry.match(/(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}[+-]\d{2}:\d{2}) (\S+) kernel: \[UFW (\S+)\]\s*(.*)/);
 
   if (match) {
-    const [, timestamp, hostname, action, interfaceIn, restOfLog] = match;
+    const [, timestamp, hostname, action, restOfLog] = match;
 
     parsedData.timestamp = timestamp;
     parsedData.hostname = hostname;
     parsedData.action = action;
-    parsedData.interface_in = interfaceIn;
 
     // Usar regex para extrair todos os pares chave=valor do restante do log
     const keyValuePairs = [...restOfLog.matchAll(/([A-Z]+)=([^\s]*)/g)];
@@ -32,9 +31,19 @@ export function parseUfwLogEntry(logEntry) {
     });
 
     // Lidar com campos que podem estar faltando ou ter valores específicos
-    if (!parsedData.out) parsedData.out = 'N/A';
-    if (!parsedData.mac) parsedData.mac = 'N/A';
-    if (!parsedData.flowlbl) parsedData.flowlbl = 'N/A';
+    if (parsedData.in !== undefined) {
+      parsedData.interface_in = parsedData.in;
+      delete parsedData.in;
+    } else {
+      parsedData.interface_in = 'N/A'; // Se IN não estiver presente
+    }
+
+    if (parsedData.out !== undefined) {
+      parsedData.interface_out = parsedData.out;
+      delete parsedData.out;
+    } else {
+      parsedData.interface_out = 'N/A'; // Se OUT não estiver presente
+    }
     
     // Lidar com o campo LEN que pode aparecer duas vezes
     if (parsedData.len !== undefined) {
